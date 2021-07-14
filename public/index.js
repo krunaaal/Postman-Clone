@@ -3,7 +3,6 @@ parameterBox.style.display = 'none';
 
 let custom = document.getElementById("radio-two2");
 let paramCount = 1;
-let url = document.getElementById('urlField').value;
 
 function getElementFromStirng(html) {
     let div = document.createElement('div');
@@ -54,6 +53,7 @@ submit.addEventListener('click', () => {
 
     let reqType = document.querySelector("input[name='switch-one']:checked").value;
     let conType = document.querySelector("input[name='switch-one1']:checked").value;
+    let url = document.getElementById('urlField').value;
     if (url == "") {
         alert("please enter URL");
     }
