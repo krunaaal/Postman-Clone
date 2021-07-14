@@ -3,6 +3,7 @@ parameterBox.style.display = 'none';
 
 let custom = document.getElementById("radio-two2");
 let paramCount = 1;
+let url = document.getElementById('urlField').value;
 
 function getElementFromStirng(html) {
     let div = document.createElement('div');
@@ -53,57 +54,52 @@ submit.addEventListener('click', () => {
 
     let reqType = document.querySelector("input[name='switch-one']:checked").value;
     let conType = document.querySelector("input[name='switch-one1']:checked").value;
-    let url = document.getElementById('urlField').value;
-    if (url.value == undefined) {
+    if (url == "") {
         alert("please enter URL");
     }
 
-    else{
-    document.getElementById('responsePrism').innerHTML = "Fetchin data...";
-
-    if (conType == "custom") {
-        data = {};
-        for (let i = 1; i <= paramCount; i++) {
-            if (document.getElementById('Key' + i) != undefined) {
-                let key = document.getElementById('Key' + i).value;
-                let value = document.getElementById('Value' + i).value;
-                data[key] = value;
+    else {
+        document.getElementById('responsePrism').innerHTML = "Fetchin data...";
+        console.log(url)
+        if (conType == "custom") {
+            data = {};
+            for (let i = 1; i <= paramCount; i++) {
+                if (document.getElementById('Key' + i) != undefined) {
+                    let key = document.getElementById('Key' + i).value;
+                    let value = document.getElementById('Value' + i).value;
+                    data[key] = value;
+                }
             }
+            data = JSON.stringify(data);
         }
-        data = JSON.stringify(data);
+
+        else {
+            data = document.getElementById('jsonText').value;
+        }
+
+
+        if (reqType == "get") {
+            fetch(url, {
+                method: 'get'
+            })
+                .then(response => response.text())
+                .then((text) => {
+                    document.getElementById('responsePrism').innerHTML = text;
+
+                });
+        }
+        else {
+            fetch(url, {
+                method: 'post',
+                body: data,
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                }
+            })
+                .then(response => response.text())
+                .then((text) => {
+                    document.getElementById('responsePrism').innerHTML = text;
+                });
+        }
     }
-
-    else {
-        data = document.getElementById('jsonText').value;
-    }
-
-    console.log('data is ', data);
-
-
-    if (reqType == "get") {
-        fetch(url, {
-            method: 'get'
-        })
-            .then(response => response.text())
-            .then((text) => {
-                // document.getElementById('responseText').value = text;
-                document.getElementById('responsePrism').innerHTML = text;
-
-            });
-    }
-    else {
-        fetch(url, {
-            method: 'post',
-            body: data,
-            headers: {
-                'Content-type': 'application/json; charset=UTF-8',
-            }
-        })
-            .then(response => response.text())
-            .then((text) => {
-                // document.getElementById('responseText').value = text;
-                document.getElementById('responsePrism').innerHTML = text;
-            });
-    }
-}
 })
